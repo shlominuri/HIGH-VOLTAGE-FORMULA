@@ -1,7 +1,7 @@
-track_data = readtable('speed-km with drag and without.csv');
+track_data = readtable('track with cones new and improved.csv');
 
 % 1. קריאת קובץ ה-CSV המלא לתוך טבלה במאטלאב
-track_data = readtable('speed-km with drag and without.csv');
+track_data = readtable('track with cones new and improved.csv');
 
 % 2. הכנת נתוני המהירות והזמן (עבור אופציה 1 - סימולציית דינמיקת רכב)
 Drive_Cycle_Data = timeseries(track_data.speed, track_data.elapsedTime);
