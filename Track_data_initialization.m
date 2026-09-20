@@ -1,5 +1,5 @@
 % 1. קריאת קובץ ה-CSV לתוך טבלה במטלאב
-track_data = readtable('data\track with cones new and improved.csv');
+track_data = readtable('data\track_with_cones_no_regen_2.csv');
 
 % --- תוספת לסימולציית Endurance ---
 num_laps = 26; % מספר הקפות
