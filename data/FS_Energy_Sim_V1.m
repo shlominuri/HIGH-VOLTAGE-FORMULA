@@ -119,7 +119,7 @@ title('Mechanical Power Required at Wheels');
 
 E_wheel_J = trapz(t, P_wheel);       % [J]
 
-E_wheel_kWh = E_wheel_J / 3.6e6;     % [kWh] - 1kWh=3.6*10^6 J
+E_wheel_kWh = E_wheel_J / 3.6e6;     % [kWh] : 1kWh=3.6*10^6 J
 
 fprintf('\n--- Wheel Power & Energy ---\n');
 fprintf('Maximum wheel power: %.2f kW\n', max(P_wheel_kW));
