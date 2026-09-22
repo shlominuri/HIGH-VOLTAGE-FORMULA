@@ -5,7 +5,7 @@ close all;
 
 %% Vehicle parameters
 
-m = 200;           % Vehicle + driver mass [kg]
+m = 300;           % Vehicle + driver mass [kg]
 g = 9.81;          % Gravitational acceleration [m/s^2]
 Crr = 0.015;       % Rolling resistance coefficient
 
@@ -325,7 +325,7 @@ fprintf('Battery traction energy for 22 km: %.2f kWh\n', ...
 
 %% Mass sensitivity analysis
 
-mass_values = 180:10:230;               % Vehicle + driver mass [kg]
+mass_values = 280:10:330;               % Vehicle + driver mass [kg]
 
 E_endurance_mass = zeros(size(mass_values));
 
@@ -547,3 +547,172 @@ grid on;
 xlabel('Rolling Resistance Coefficient C_{rr}');
 ylabel('Endurance Battery Energy [kWh]');
 title('Effect of Rolling Resistance on Endurance Energy');
+
+%% =========================================================
+%  OptimumLap vs Our Model - Diagnostic Comparison
+% ==========================================================
+
+% OptimumLap data
+T_opt = data.torque;                 % Motor torque [Nm]
+RPM_opt = data.engineSpeed;          % Motor speed [rpm]
+P_opt_hp = data.power;               % OptimumLap power [hp]
+P_opt_kW = P_opt_hp * 0.7457;        % Convert hp -> kW
+
+throttle_opt = data.throttlePosition;
+brake_opt = data.brakePosition;
+TC_opt = data.tractionControl;
+
+% Our model
+T_our = T_motor;                     % [Nm]
+RPM_our = RPM_motor;                 % [rpm]
+P_our_kW = P_motor / 1000;           % [kW]
+
+
+%% Torque difference
+
+T_diff = T_opt - T_our;
+
+fprintf('\n--- OptimumLap vs Our Model ---\n');
+
+fprintf('Maximum OptimumLap torque: %.2f Nm\n', max(T_opt));
+fprintf('Maximum our torque: %.2f Nm\n', max(T_our));
+
+fprintf('Mean OptimumLap torque: %.2f Nm\n', mean(T_opt));
+fprintf('Mean our torque: %.2f Nm\n', mean(T_our));
+
+fprintf('Maximum torque difference: %.2f Nm\n', max(abs(T_diff)));
+
+
+%% Plot torque comparison
+
+figure;
+
+plot(t, T_opt, 'LineWidth', 1.2);
+hold on;
+plot(t, T_our, 'LineWidth', 1.5);
+
+grid on;
+
+xlabel('Time [s]');
+ylabel('Motor Torque [Nm]');
+title('Motor Torque: OptimumLap vs Our Model');
+
+legend('OptimumLap', 'Our Model');
+
+
+%% Plot mechanical power comparison
+
+figure;
+
+plot(t, P_opt_kW, 'LineWidth', 1.2);
+hold on;
+plot(t, P_our_kW, 'LineWidth', 1.5);
+
+grid on;
+
+xlabel('Time [s]');
+ylabel('Mechanical Power [kW]');
+title('Motor Power: OptimumLap vs Our Model');
+
+legend('OptimumLap', 'Our Model');
+
+
+%% Compare RPM
+
+figure;
+
+plot(t, RPM_opt, 'LineWidth', 1.2);
+hold on;
+plot(t, RPM_our, 'LineWidth', 1.5);
+
+grid on;
+
+xlabel('Time [s]');
+ylabel('Motor Speed [rpm]');
+title('Motor Speed: OptimumLap vs Our Model');
+
+legend('OptimumLap', 'Our Model');
+
+
+%% Energy calculated directly from OptimumLap power
+
+E_opt_mech_J = trapz(t, P_opt_kW * 1000);
+E_opt_mech_kWh = E_opt_mech_J / 3.6e6;
+
+fprintf('\n--- Mechanical Energy Comparison ---\n');
+
+fprintf('OptimumLap mechanical energy per lap: %.4f kWh\n', ...
+    E_opt_mech_kWh);
+
+fprintf('Our motor mechanical energy per lap: %.4f kWh\n', ...
+    E_motor_kWh);
+
+fprintf('OptimumLap / Our energy ratio: %.2f\n', ...
+    E_opt_mech_kWh / E_motor_kWh);
+
+%% Check whether OptimumLap torque explains CSV acceleration
+
+F_wheel_from_opt = ...
+    T_opt .* GR .* eta_gear ./ r_wheel;
+
+a_from_opt_torque = ...
+    (F_wheel_from_opt - F_drag - F_rr) ./ m;
+
+figure;
+
+plot(t, a_calc, 'LineWidth', 1.5);
+hold on;
+
+plot(t, a_from_opt_torque, 'LineWidth', 1.2);
+
+grid on;
+
+xlabel('Time [s]');
+ylabel('Acceleration [m/s^2]');
+title('Acceleration Consistency Check');
+
+legend('Acceleration from speed profile', ...
+    'Acceleration predicted from OptimumLap torque');
+
+%% Compare CSV acceleration with our calculated acceleration
+
+% Acceleration directly from OptimumLap CSV
+a_opt = data.longitudinalAcceleration;
+
+% Our acceleration calculated from the CSV speed profile
+a_our = gradient(v, t);
+
+figure;
+
+plot(t, a_opt, 'LineWidth', 1.5);
+hold on;
+
+plot(t, a_our, '--', 'LineWidth', 1.3);
+
+grid on;
+
+xlabel('Time [s]');
+ylabel('Longitudinal Acceleration [m/s^2]');
+title('Longitudinal Acceleration: OptimumLap CSV vs Our Calculation');
+
+legend('OptimumLap CSV', ...
+    'Our calculation from v(t)', ...
+    'Location', 'best');
+
+%% Acceleration comparison statistics
+
+a_error = a_opt - a_our;
+
+fprintf('\n--- Acceleration Comparison ---\n');
+
+fprintf('CSV max acceleration: %.3f m/s^2\n', max(a_opt));
+fprintf('Our max acceleration: %.3f m/s^2\n', max(a_our));
+
+fprintf('CSV min acceleration: %.3f m/s^2\n', min(a_opt));
+fprintf('Our min acceleration: %.3f m/s^2\n', min(a_our));
+
+fprintf('Mean absolute difference: %.4f m/s^2\n', ...
+    mean(abs(a_error)));
+
+fprintf('Maximum absolute difference: %.4f m/s^2\n', ...
+    max(abs(a_error)));
