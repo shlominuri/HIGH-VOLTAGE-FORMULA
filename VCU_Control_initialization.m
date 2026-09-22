@@ -1,8 +1,8 @@
 % VCU Control parameters
 
 % Rate limiter
-VCU_torque_rise_rate = 4000;   % [Nm/s] TESTING VALUE NON FINAL!
-VCU_torque_fall_rate = -8000;  % [Nm/s] TESTING VALUE NON FINAL!
+VCU_torque_rise_rate = 2000;   % [Nm/s] TESTING VALUE NON FINAL!
+VCU_torque_fall_rate = -4000;  % [Nm/s] TESTING VALUE NON FINAL!
 
 % Low-pass filter
 VCU_torque_lpf_fc = 10;   % [Hz] TEMPORARY
