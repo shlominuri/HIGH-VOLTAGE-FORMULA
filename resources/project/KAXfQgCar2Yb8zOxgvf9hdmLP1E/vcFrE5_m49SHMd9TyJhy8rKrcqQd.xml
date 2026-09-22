@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Info File="data/motoer_efficiency_map.m" GroupUUID="default" Icon="" Name="motoer_efficiency_map" Type="StartUp" Visible="0">
+    <Extension Name="StartUpPrev" Value="b86229a8-35b0-4456-abc4-db5931a321f6"/>
+</Info>
