@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Info File="data/inverter_efficiency_map.m" GroupUUID="default" Icon="" Name="inverter_efficiency_map" Type="StartUp" Visible="0">
+    <Extension Name="StartUpPrev" Value="aee06f0a-e21c-43a1-a2f7-1ed52caee371"/>
+</Info>
