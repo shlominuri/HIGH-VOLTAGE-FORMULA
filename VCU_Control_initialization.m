@@ -21,13 +21,39 @@ VCU_derate_Vfull = 350;   % [V] temporary tuning value
 
 VCU_power_floor = 1;               % [W], prevents division by zero
 
-% Battery lookup tables used by VCU derating
-VCU_batt_soc_bp_ocv = ModuleType1.SOCBreakpointsCell;
-VCU_batt_ocv_table  = ModuleType1.OpenCircuitVoltageThermalCell(:,1);
+VCU_drivetrain_efficiency = 0.80;   % [-] temporary approximation MUST CHANGE THE ENTIRE EFFICIENCY LOGIC LATER!!!!!!!!!!!!!!!!!!!
 
-VCU_batt_soc_bp_r0  = ModuleType1.ResistanceSOCBreakpointsCell;
-VCU_batt_temp_bp_r0 = ModuleType1.ResistanceTemperatureBreakpointsCell;
-VCU_batt_r0_table   = ModuleType1.R0ThermalCell;
+% Battery data for VCU derating
+% Read directly from the battery model that is actually active.
+
+if ~bdIsLoaded('Accumulator')
+    repo_root = fileparts(mfilename('fullpath'));
+    load_system(fullfile(repo_root, 'models', 'Accumulator.slx'));
+end
+
+batt_block = ...
+    'Accumulator/P50_14s4pX10/ModuleAssembly10/P50_14s4p';
+
+% Breakpoints
+VCU_batt_soc_bp_ocv = ...
+    str2num(get_param(batt_block, 'SOCBreakpointsCell'));
+
+VCU_batt_soc_bp_r0 = ...
+    str2num(get_param(batt_block, 'ResistanceSOCBreakpointsCell'));
+
+VCU_batt_temp_bp_r0 = ...
+    str2num(get_param(batt_block, 'ResistanceTemperatureBreakpointsCell'));
+
+% Electrical tables
+VCU_batt_ocv_table_full = ...
+    str2num(get_param(batt_block, 'OpenCircuitVoltageThermalCell'));
+
+VCU_batt_r0_table = ...
+    str2num(get_param(batt_block, 'R0ThermalCell'));
+
+% OCV is temperature-independent in this parameterization,
+% so one column is sufficient for the 1-D SOC lookup.
+VCU_batt_ocv_table = VCU_batt_ocv_table_full(:,1);
 
 fprintf('VCU_torque_lpf_tau = %.6f s\n', VCU_torque_lpf_tau)
 disp('DONE')
