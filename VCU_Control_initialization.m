@@ -9,7 +9,7 @@ VCU_torque_lpf_fc = 10;   % [Hz] TEMPORARY
 VCU_torque_lpf_tau = 1 / (2*pi*VCU_torque_lpf_fc);   % [sec]
 
 % Power limiting
-VCU_max_power = 75e3;       % [W] TEMPORARY, note that 75K is the mechanical power and not the actual power outputted by the battery
+VCU_max_power = 77e3;       % [W] TEMPORARY, note that 75K is the mechanical power and not the actual power outputted by the battery
 VCU_omega_floor = 1;        % [rad/s], prevents division by zero
 
 VCU_batt_series_cells   = 140;     % 140S
