@@ -36,24 +36,24 @@ batt_block = ...
 
 % Breakpoints
 VCU_batt_soc_bp_ocv = ...
-    str2num(get_param(batt_block, 'SOCBreakpointsCell'));
+    evalin('base', get_param(batt_block, 'SOCBreakpointsCell'));
 
 VCU_batt_soc_bp_r0 = ...
-    str2num(get_param(batt_block, 'ResistanceSOCBreakpointsCell'));
+    evalin('base', get_param(batt_block, 'ResistanceSOCBreakpointsCell'));
 
 VCU_batt_temp_bp_r0 = ...
-    str2num(get_param(batt_block, 'ResistanceTemperatureBreakpointsCell'));
+    evalin('base', get_param(batt_block, 'ResistanceTemperatureBreakpointsCell'));
 
 % Electrical tables
 VCU_batt_ocv_table_full = ...
-    str2num(get_param(batt_block, 'OpenCircuitVoltageThermalCell'));
+    evalin('base', get_param(batt_block, 'OpenCircuitVoltageThermalCell'));
 
 VCU_batt_r0_table = ...
-    str2num(get_param(batt_block, 'R0ThermalCell'));
+    evalin('base', get_param(batt_block, 'R0ThermalCell'));
 
-% OCV is temperature-independent in this parameterization,
+% OCV is temperature-independent in this parameterization
 % so one column is sufficient for the 1-D SOC lookup.
-VCU_batt_ocv_table = VCU_batt_ocv_table_full(:);
+VCU_batt_ocv_table = VCU_batt_ocv_table_full(:,1);
 
 fprintf('VCU_torque_lpf_tau = %.6f s\n', VCU_torque_lpf_tau)
 disp('DONE')
