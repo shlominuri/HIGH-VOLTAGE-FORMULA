@@ -32,7 +32,7 @@ if ~bdIsLoaded('Accumulator')
 end
 
 batt_block = ...
-    'Accumulator/NewPack/NewModuleAssembly/Module10';
+    'Accumulator/P5014S4PFINAL2/NewModuleAssembly/Module10';
 
 % Breakpoints
 VCU_batt_soc_bp_ocv = ...
