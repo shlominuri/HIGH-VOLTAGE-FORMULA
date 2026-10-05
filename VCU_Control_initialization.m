@@ -32,7 +32,7 @@ if ~bdIsLoaded('Accumulator')
 end
 
 batt_block = ...
-    'Accumulator/P50_14s4pX10/ModuleAssembly10/P50_14s4p';
+    'Accumulator/NewPack/NewModuleAssembly/Module10';
 
 % Breakpoints
 VCU_batt_soc_bp_ocv = ...
@@ -53,7 +53,7 @@ VCU_batt_r0_table = ...
 
 % OCV is temperature-independent in this parameterization,
 % so one column is sufficient for the 1-D SOC lookup.
-VCU_batt_ocv_table = VCU_batt_ocv_table_full(:,1);
+VCU_batt_ocv_table = VCU_batt_ocv_table_full(:);
 
 fprintf('VCU_torque_lpf_tau = %.6f s\n', VCU_torque_lpf_tau)
 disp('DONE')
